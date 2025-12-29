@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surya's Wedding - Tech Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #48ff97;
+            --secondary: #6c5ce7;
+            --bg: #0a0f1c;
+            --text: #e0e6ed;
+            --code-bg: #1a1f2e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(26, 31, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(72, 255, 151, 0.2);
+            border: 1px solid rgba(72, 255, 151, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .terminal {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .terminal::after {
+            content: '● ● ●';
+            position: absolute;
+            top: 7px;
+            left: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .code {
+            padding-top: 10px;
+            line-height: 1.6;
+        }
+
+        .comment { color: #6a9955; }
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .function { color: #dcdcaa; }
+        .variable { color: #9cdcfe; }
+        .number { color: #b5cea8; }
+
+        .input-group {
+            margin: 1rem 0;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        input, textarea {
+            background: var(--code-bg);
+            border: 1px solid rgba(72, 255, 151, 0.3);
+            padding: 0.8rem;
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(72, 255, 151, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--bg);
+            font-family: 'JetBrains Mono', monospace;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 255, 151, 0.4);
+        }
+
+        .preview {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(26, 31, 46, 0.5);
+        }
+
+        .timeline {
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-content {
+            width: 45%;
+            padding: 1rem;
+            background: var(--code-bg);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .timeline-left::after {
+            right: -60px;
+        }
+
+        .timeline-right::after {
+            left: -60px;
+        }
+
+        .timeline-right {
+            margin-left: auto;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .countdown-item {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .countdown-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .timeline::before {
+                left: 0;
+            }
+            .timeline-content {
+                width: 90%;
+                margin-left: auto;
+            }
+            .timeline-left::after {
+                left: -60px;
+            }
+            .countdown {
+                flex-wrap: wrap;
+            }
+        }
+
+@keyframes confettiFall {
+    to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Success Modal -->
+    <canvas id="particles"></canvas>
+    <div class="container">
+        <div class="header">
+            <h4 class="title" id="typewriter"></h4>
+            <div class="floating">💻 💍 💝</div>
+        </div>
+
+        <div class="countdown">
+            <div class="countdown-item">
+                <div class="countdown-number" id="days">00</div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="hours">00</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="minutes">00</div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="seconds">00</div>
+                <div class="countdown-label">Seconds</div>
+            </div>
+        </div>
+
+        <div class="preview" id="rsvpPreview"></div>
+    </div>
+
+    <script>
+        // Typewriter effect
+        const text = `Thank you,\n
+            Your response has been received successfully.\n
+            We're excited to celebrate with you!`;
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typewriter").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+        typeWriter();
+
+        // Countdown timer
+        const weddingDate = new Date('2026-02-22T07:30:00').getTime();
+        
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+            
+            document.getElementById('days').textContent = Math.floor(distance / (1000 * 60 * 60 * 24));
+            document.getElementById('hours').textContent = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById('minutes').textContent = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById('seconds').textContent = Math.floor((distance % (1000 * 60)) / 1000);
+        }
+        
+        setInterval(updateCountdown, 1000);
+
+        // Timeline animation
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback);
+        document.querySelectorAll('.timeline-item').forEach(item => observer.observe(item));
+
+        // Particle background
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const particles = [];
+        const particleCount = 100;
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            
+            draw() {
+                ctx.fillStyle = 'rgba(72, 255, 151, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function initParticles() {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let particle of particles) {
+                particle.update();
+                particle.draw();
+            }
+            
+            requestAnimationFrame(animateParticles);
+        }
+        
+        initParticles();
+        animateParticles();
+
+        // RSVP Form handling
+        const rsvpForm = document.getElementById('rsvpForm');
+        const preview = document.getElementById('rsvpPreview');
+        
+        function updatePreview() {
+            const name = document.getElementById('name').value || '[Your Name]';
+            const email = document.getElementById('email').value || '[Your Email]';
+            const message = document.getElementById('message').value || '[Your Message]';
+            
+            preview.innerHTML = `
+                <span class="comment">// RSVP Preview</span><br>
+                <span class="keyword">const</span> <span class="variable">response</span> = {<br>
+                &nbsp;&nbsp;status: <span class="string">"ATTENDING"</span>,<br>
+                &nbsp;&nbsp;guest: <span class="string">"${name}"</span>,<br>
+                &nbsp;&nbsp;email: <span class="string">"${email}"</span>,<br>
+                &nbsp;&nbsp;message: <span class="string">"${message}"</span><br>
+                };
+            `;
+        }
+        
+        document.getElementById('name').addEventListener('input', updatePreview);
+        document.getElementById('email').addEventListener('input', updatePreview);
+        document.getElementById('message').addEventListener('input', updatePreview);
+
+        // Handle window resize for particles
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles.length = 0;
+            initParticles();
+        });
+
+        // Initialize Google Map
+        function initMap() {
+            // Replace these coordinates with your wedding venue's location
+            const venueLocation = { lat: YOUR_LATITUDE, lng: YOUR_LONGITUDE };
+            
+            const map = new google.maps.Map(document.getElementById('map-container'), {
+                zoom: 15,
+                center: venueLocation,
+                styles: [
+                    {
+                        "elementType": "geometry",
+                        "stylers": [{"color": "#1a1f2e"}]
+                    },
+                    {
+                        "elementType": "labels.text.stroke",
+                        "stylers": [{"color": "#242f3e"}]
+                    },
+                    {
+                        "elementType": "labels.text.fill",
+                        "stylers": [{"color": "#746855"}]
+                    }
+                ]
+            });
+
+            const marker = new google.maps.Marker({
+                position: venueLocation,
+                map: map,
+                title: 'Wedding Venue'
+            });
+        }
+
+        // Initialize map when the page loads
+        window.addEventListener('load', initMap);
+        // Store name before form submission
+const rsvpFormElement = document.querySelector('form[action*="formsubmit"]');
+const nameInput = document.getElementById('name');
+
+rsvpFormElement.addEventListener('submit', function(e) {
+    const userName = nameInput.value;
+    localStorage.setItem('rsvpName', userName);
+});
+
+// Check for success parameter on page load
+window.addEventListener('load', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlParams.get('success') === 'true') {
+        const userName = localStorage.getItem('rsvpName') || 'Guest';
+        showModal(userName);
+        
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
+
+// Show modal function
+function showModal(name) {
+    const modal = document.getElementById('successModal');
+    const modalName = document.getElementById('modalName');
+    
+    modalName.textContent = name;
+    modal.classList.add('active');
+    createConfetti();
+}
+
+// Close modal function
+function closeModal() {
+    const modal = document.getElementById('successModal');
+    modal.classList.remove('active');
+    localStorage.removeItem('rsvpName');
+    
+    // Reset form
+    document.querySelector('form[action*="formsubmit"]').reset();
+    updatePreview();
+}
+
+// Create confetti effect
+function createConfetti() {
+    const colors = ['#48ff97', '#6c5ce7', '#ff6b6b', '#feca57', '#48dbfb'];
+    const confettiCount = 50;
+    const modalContent = document.querySelector('.modal-content');
+    
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti. style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style. animationDelay = Math.random() * 0.5 + 's';
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        
+        modalContent. appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 3000);
+    }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('successModal');
+    if (e.target === modal) {
+        closeModal();
+    }
+});
+    </script>
+</body>
+</html>
