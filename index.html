@@ -357,10 +357,15 @@
             </div>
         </div>
 
-        <form id="rsvpForm" class="input-group">
-            <input type="text" id="name" placeholder="Your Name" required>
-            <input type="email" id="email" placeholder="Your Email" required>
-            <textarea id="message" placeholder="Your Message (Optional)" rows="3"></textarea>
+        <form action="https://formsubmit.co/suryaesp.5@gmail.com" method="POST" class="input-group">
+            <input type="text" name="name" id="name" placeholder="Your Name" required>
+            <input type="email" name="email" id="email" placeholder="Your Email" required>
+            <textarea name="message" id="message" placeholder="Your Message (Optional)" rows="3"></textarea>
+    
+            <!-- Hidden fields for FormSubmit configuration -->
+            <input type="hidden" name="_subject" value="New Wedding RSVP! ">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
             <button type="submit" class="btn">Execute RSVP()</button>
         </form>
 
