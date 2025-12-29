@@ -493,15 +493,6 @@
         document.getElementById('name').addEventListener('input', updatePreview);
         document.getElementById('email').addEventListener('input', updatePreview);
         document.getElementById('message').addEventListener('input', updatePreview);
-        
-        rsvpForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            
-            window.location.href = `mailto:suryaesp.5@gmail.com?subject=Wedding RSVP&body=Name: ${name}%0D%0AEmail: ${email}%0D%0AMessage: ${message}`;
-        });
 
         // Handle window resize for particles
         window.addEventListener('resize', () => {
